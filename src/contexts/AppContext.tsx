@@ -167,26 +167,59 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const handleExportPdf = async () => {
-      if (!printableRef.current) return;
+      const element = printableRef.current;
+      if (!element) return;
       toast({ title: "Gerando PDF...", description: "Por favor, aguarde." });
+      
+      // Temporarily give the body a white background for capture
+      const originalBackgroundColor = document.body.style.backgroundColor;
+      document.body.style.backgroundColor = 'white';
 
       try {
-          const canvas = await html2canvas(printableRef.current, { scale: 2, useCORS: true, backgroundColor: null });
+          const canvas = await html2canvas(element, { 
+              scale: 2, 
+              useCORS: true,
+              logging: false,
+              onclone: (document) => {
+                // On clone, find the table and remove responsive wrapper if it exists
+                const tableWrapper = document.querySelector('.relative.w-full.overflow-auto');
+                if (tableWrapper) {
+                    tableWrapper.style.overflow = 'visible';
+                }
+              }
+          });
+          
+          document.body.style.backgroundColor = originalBackgroundColor;
+
           const imgData = canvas.toDataURL('image/png');
           const pdf = new jsPDF('l', 'mm', 'a4');
           const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = pdf.internal.pageSize.getHeight();
+          const pdfHeight = pdf.internal.seventy five.pageSize.getHeight();
+
           const imgWidth = canvas.width;
           const imgHeight = canvas.height;
-          const ratio = Math.min((pdfWidth - 20) / imgWidth, (pdfHeight - 20) / imgHeight);
-          const imgX = (pdfWidth - imgWidth * ratio) / 2;
-          const imgY = 10;
           
-          pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-          pdf.save(`descarrego_${appState.settings.bancaName.replace(' ','_')}_${appState.date}.pdf`);
+          // Use a margin of 10mm
+          const margin = 10;
+          const usableWidth = pdfWidth - (2 * margin);
+          const usableHeight = pdfHeight - (2 * margin);
+
+          const ratio = Math.min(usableWidth / imgWidth, usableHeight / imgHeight);
+
+          const finalImgWidth = imgWidth * ratio;
+          const finalImgHeight = imgHeight * ratio;
+
+          const imgX = (pdfWidth - finalImgWidth) / 2;
+          const imgY = (pdfHeight - finalImgHeight) / 2;
+          
+          pdf.addImage(imgData, 'PNG', imgX, imgY, finalImgWidth, finalImgHeight);
+          pdf.save(`descarrego_${appState.settings.bancaName.replace(/ /g, '_')}_${appState.date}.pdf`);
+
           toast({ title: "PDF Gerado!", description: "Seu PDF foi exportado com sucesso." });
-      } catch(e) {
-          toast({ variant: "destructive", title: "Erro ao gerar PDF", description: "Ocorreu um erro inesperado." });
+      } catch(e: any) {
+          document.body.style.backgroundColor = originalBackgroundColor;
+          console.error(e);
+          toast({ variant: "destructive", title: "Erro ao gerar PDF", description: e.message || "Ocorreu um erro inesperado." });
       }
   };
 
