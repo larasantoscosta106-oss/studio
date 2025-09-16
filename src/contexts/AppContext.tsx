@@ -200,18 +200,15 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           const pdfWidth = pdf.internal.pageSize.getWidth();
           const pdfHeight = pdf.internal.pageSize.getHeight();
 
-          const imgWidth = canvas.width;
-          const imgHeight = canvas.height;
-          
           // Use a margin of 10mm
           const margin = 10;
           const usableWidth = pdfWidth - (2 * margin);
           const usableHeight = pdfHeight - (2 * margin);
 
-          const ratio = Math.min(usableWidth / imgWidth, usableHeight / imgHeight);
+          const ratio = Math.min(usableWidth / canvas.width, usableHeight / canvas.height);
 
-          const finalImgWidth = imgWidth * ratio;
-          const finalImgHeight = imgHeight * ratio;
+          const finalImgWidth = canvas.width * ratio;
+          const finalImgHeight = canvas.height * ratio;
 
           const imgX = (pdfWidth - finalImgWidth) / 2;
           const imgY = (pdfHeight - finalImgHeight) / 2;

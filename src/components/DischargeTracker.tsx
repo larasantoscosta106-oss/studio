@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useRef, useMemo } from 'react';
+import React from 'react';
 import { AppContext, useAppContext } from '@/contexts/AppContext';
 import AppHeader from './AppHeader';
 import Toolbar from './Toolbar';
 import DischargeTable from './DischargeTable';
+import PeriodTotals from './PeriodTotals'; // Importado
 import TotalsFooter from './TotalsFooter';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -21,6 +22,7 @@ const DischargeTracker = () => {
             <h2 className="text-xl font-semibold text-center pb-4">Data: {formattedDate}</h2>
         </div>
         <DischargeTable />
+        <PeriodTotals />
         <TotalsFooter />
     </div>
   );
