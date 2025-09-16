@@ -49,12 +49,13 @@ const DischargeTable = () => {
               <TableRow>
                 <TableCell className="font-medium px-4 whitespace-nowrap">Entradas Geral</TableCell>
                 {COLUMNS.map((col) => (
-                  <TableCell key={col} className="px-2">
+                  <TableCell key={col} className="px-2 text-right">
                     <CurrencyInput
                       value={appState.log.entradas[col]}
                       onValueChange={(value) => updateLog(col, "entradas", value)}
                       className="text-right w-full"
                     />
+                     <span className="currency-value hidden">{formatCurrency(appState.log.entradas[col])}</span>
                   </TableCell>
                 ))}
                 <TableCell className="text-right font-bold px-4 whitespace-nowrap">{formatCurrency(rowTotals.entradas)}</TableCell>
@@ -71,12 +72,13 @@ const DischargeTable = () => {
               <TableRow>
                 <TableCell className="font-medium px-4 whitespace-nowrap">Prêmios</TableCell>
                 {COLUMNS.map((col) => (
-                  <TableCell key={col} className="px-2">
+                  <TableCell key={col} className="px-2 text-right">
                     <CurrencyInput
                       value={appState.log.premios[col]}
                       onValueChange={(value) => updateLog(col, "premios", value)}
                       className="text-right w-full"
                     />
+                    <span className="currency-value hidden">{formatCurrency(appState.log.premios[col])}</span>
                   </TableCell>
                 ))}
                 <TableCell className="text-right font-bold px-4 whitespace-nowrap">{formatCurrency(rowTotals.premios)}</TableCell>

@@ -90,6 +90,9 @@
   body {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+    background-color: #fff !important;
   }
   .print-only {
     display: block !important;
@@ -106,5 +109,39 @@
     margin: 0 !important;
     box-shadow: none !important;
     border: none !important;
+    background-color: #fff !important;
+  }
+
+  .printable-area table {
+    font-size: 12px;
+    color: #000;
+  }
+
+  .printable-area th,
+  .printable-area td {
+    padding: 6px 10px;
+    white-space: nowrap;
+    color: #000 !important;
+    background-color: transparent !important;
+  }
+
+  .printable-area input {
+    display: none;
+  }
+  
+  .printable-area .currency-value {
+    display: block;
+  }
+
+  .printable-area .font-bold {
+    font-weight: 700 !important;
+  }
+
+  .printable-area .text-destructive {
+    color: #D32F2F !important;
+  }
+
+  .printable-area .text-green-600 {
+    color: #2E7D32 !important;
   }
 }
