@@ -28,19 +28,18 @@ const DischargeTable = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-xl font-bold text-center mb-4 text-primary">Resumo de Entradas e Saídas</h2>
-      <div className="border rounded-lg overflow-hidden">
+      <div className="border rounded-lg overflow-hidden shadow-sm">
         <div className="relative w-full overflow-auto">
           <Table>
-            <TableHeader className="bg-primary/90 text-primary-foreground">
-              <TableRow>
-                <TableHead className="w-[150px] font-bold text-primary-foreground">Item</TableHead>
+            <TableHeader>
+              <TableRow className="bg-muted/60 hover:bg-muted/60">
+                <TableHead className="w-[150px] font-bold text-foreground">Item</TableHead>
                 {COLUMNS.map((col) => (
-                  <TableHead key={col} className="text-right font-bold text-primary-foreground min-w-[150px]">
+                  <TableHead key={col} className="text-right font-bold text-foreground min-w-[150px]">
                     {COLUMN_NAMES[col]}
                   </TableHead>
                 ))}
-                <TableHead className="text-right font-bold text-primary-foreground min-w-[150px]">Diário</TableHead>
+                <TableHead className="text-right font-bold text-foreground min-w-[150px]">Diário</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -56,7 +55,7 @@ const DischargeTable = () => {
                 ))}
                 <TableCell className="text-right font-bold">{formatCurrency(rowTotals.entradas)}</TableCell>
               </TableRow>
-              <TableRow>
+              <TableRow className="bg-muted/30">
                 <TableCell className="font-medium text-destructive">Comissão</TableCell>
                 {COLUMNS.map((col) => (
                   <TableCell key={col} className="text-right text-destructive">
@@ -77,7 +76,7 @@ const DischargeTable = () => {
                 ))}
                 <TableCell className="text-right font-bold">{formatCurrency(rowTotals.premios)}</TableCell>
               </TableRow>
-              <TableRow className="bg-muted/50">
+              <TableRow className="bg-muted/60 hover:bg-muted/60">
                 <TableCell className="font-medium">Saldo Final</TableCell>
                 {COLUMNS.map((col) => (
                   <TableCell
