@@ -82,7 +82,10 @@
 
 @layer utilities {
   .no-print {
-    display: block;
+    @apply block;
+  }
+  .print-only {
+    @apply hidden;
   }
 }
 
@@ -99,6 +102,12 @@
   }
   .no-print {
     display: none !important;
+  }
+  .print\:hidden {
+    display: none !important;
+  }
+  .print\:block {
+      display: block !important;
   }
   @page {
     size: A4 landscape;
@@ -124,13 +133,10 @@
     color: #000 !important;
     background-color: transparent !important;
   }
-
-  .printable-area input {
-    display: none;
-  }
   
   .printable-area .currency-value {
     display: block;
+    font-weight: 500;
   }
 
   .printable-area .font-bold {

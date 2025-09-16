@@ -53,9 +53,9 @@ const DischargeTable = () => {
                     <CurrencyInput
                       value={appState.log.entradas[col]}
                       onValueChange={(value) => updateLog(col, "entradas", value)}
-                      className="text-right w-full"
+                      className="text-right w-full print:hidden"
                     />
-                     <span className="currency-value hidden">{formatCurrency(appState.log.entradas[col])}</span>
+                     <span className="currency-value hidden print:block text-right w-full">{formatCurrency(appState.log.entradas[col])}</span>
                   </TableCell>
                 ))}
                 <TableCell className="text-right font-bold px-4 whitespace-nowrap">{formatCurrency(rowTotals.entradas)}</TableCell>
@@ -76,9 +76,9 @@ const DischargeTable = () => {
                     <CurrencyInput
                       value={appState.log.premios[col]}
                       onValueChange={(value) => updateLog(col, "premios", value)}
-                      className="text-right w-full"
+                      className="text-right w-full print:hidden"
                     />
-                    <span className="currency-value hidden">{formatCurrency(appState.log.premios[col])}</span>
+                    <span className="currency-value hidden print:block text-right w-full">{formatCurrency(appState.log.premios[col])}</span>
                   </TableCell>
                 ))}
                 <TableCell className="text-right font-bold px-4 whitespace-nowrap">{formatCurrency(rowTotals.premios)}</TableCell>
@@ -94,7 +94,7 @@ const DischargeTable = () => {
                     )}
                   >
                     {formatCurrency(balances[col])}
-                     {appState.log.entradas[col] > 0 && (appState.log.entradas[col] < commissions[col] + appState.log.premios[col]) && <div className="text-xs font-normal text-center">Aviso: Negativo</div>}
+                     {appState.log.entradas[col] > 0 && (appState.log.entradas[col] < commissions[col] + appState.log.premios[col]) && <div className="text-xs font-normal text-center print:hidden">Aviso: Negativo</div>}
                   </TableCell>
                 ))}
                 <TableCell
