@@ -7,6 +7,8 @@ import { PERIODS, COLUMNS } from '@/lib/types';
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 interface AppContextType {
   multiAppState: MultiBancaState;
@@ -215,6 +217,13 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           const imgY = (pdfHeight - finalImgHeight) / 2;
           
           pdf.addImage(imgData, 'PNG', imgX, imgY, finalImgWidth, finalImgHeight);
+          
+          const now = new Date();
+          const dateTimeString = format(now, "dd/MM/yyyy 'às' HH:mm:ss", { locale: ptBR });
+          pdf.setFontSize(8);
+          pdf.setTextColor(150);
+          pdf.text(`Exportado em: ${dateTimeString}`, margin, pdfHeight - margin + 5);
+
           pdf.save(`descarrego_${appState.settings.bancaName.replace(/ /g, '_')}_${appState.date}.pdf`);
 
           toast({ title: "PDF Gerado!", description: "Seu PDF foi exportado com sucesso." });
