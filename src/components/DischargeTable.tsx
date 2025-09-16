@@ -27,7 +27,8 @@ const DischargeTable = () => {
   const { appState, commissions, balances, rowTotals, updateLog } = useAppContext();
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto p-4">
+      <h2 className="text-xl font-bold text-center mb-4 text-primary">Resumo de Entradas e Saídas</h2>
       <div className="border rounded-lg overflow-hidden">
         <div className="relative w-full overflow-auto">
           <Table>
