@@ -85,7 +85,7 @@
 
 @layer utilities {
   .no-print {
-    display: none !important;
+    display: block;
   }
 }
 
