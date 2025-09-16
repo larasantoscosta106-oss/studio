@@ -42,11 +42,13 @@ export const useAppContext = () => {
 
 const getInitialBancaState = (bancaId: BancaId): AppState => {
   const isRealCariri = bancaId === 'realCariri';
+  const initialLogValue = { manha: 0, tarde: 0, noite: 0, grupoManha: 0, grupoTarde: 0, grupoNoite: 0 };
+  
   return {
     date: new Date().toISOString().split('T')[0],
     log: {
-      entradas: { manha: 100, tarde: 150, noite: 80, grupoManha: 50, grupoTarde: 60, grupoNoite: 70 },
-      premios: { manha: 10, tarde: 0, noite: 5, grupoManha: 0, grupoTarde: 15, grupoNoite: 0 },
+      entradas: { ...initialLogValue },
+      premios: { ...initialLogValue },
     },
     settings: {
       bancaName: isRealCariri ? "Real Cariri" : "Banca União",
@@ -194,7 +196,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           const imgData = canvas.toDataURL('image/png');
           const pdf = new jsPDF('l', 'mm', 'a4');
           const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = pdf.internal.seventy five.pageSize.getHeight();
+          const pdfHeight = pdf.internal.pageSize.getHeight();
 
           const imgWidth = canvas.width;
           const imgHeight = canvas.height;
