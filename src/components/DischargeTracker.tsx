@@ -15,7 +15,7 @@ const DischargeTracker = () => {
   const formattedDate = format(new Date(appState.date + 'T00:00:00'), "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
 
   return (
-    <div className='printable-area bg-background' ref={printableRef}>
+    <div className='bg-background' ref={printableRef}>
         <div className="container mx-auto pb-4 print-only hidden">
             <h1 className="text-2xl font-bold text-center py-4">ROTEIRO DESCARGA – {appState.settings.bancaName.toUpperCase()}</h1>
             <h2 className="text-xl font-semibold text-center pb-4">Data: {formattedDate}</h2>

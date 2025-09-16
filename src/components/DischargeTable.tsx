@@ -27,72 +27,77 @@ const DischargeTable = () => {
   const { appState, commissions, balances, rowTotals, updateLog } = useAppContext();
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="border rounded-lg overflow-hidden shadow-sm">
+    <div className="container mx-auto px-4 pt-4">
+      <div className="border rounded-lg overflow-hidden shadow-sm printable-area">
+        <h2 className="text-xl font-bold text-center py-3 bg-muted/20 no-print">
+            Painel de Lançamentos
+        </h2>
         <div className="relative w-full overflow-auto">
           <Table>
             <TableHeader>
-              <TableRow className="bg-muted/60 hover:bg-muted/60">
-                <TableHead className="w-[150px] font-bold text-foreground">Item</TableHead>
+              <TableRow className="bg-muted/50 hover:bg-muted/50">
+                <TableHead className="w-[150px] font-bold text-foreground px-4">Item</TableHead>
                 {COLUMNS.map((col) => (
-                  <TableHead key={col} className="text-right font-bold text-foreground min-w-[150px]">
+                  <TableHead key={col} className="text-center font-bold text-foreground min-w-[150px] px-4">
                     {COLUMN_NAMES[col]}
                   </TableHead>
                 ))}
-                <TableHead className="text-right font-bold text-foreground min-w-[150px]">Diário</TableHead>
+                <TableHead className="text-center font-bold text-foreground min-w-[150px] px-4">Diário</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow>
-                <TableCell className="font-medium">Entradas Geral</TableCell>
+                <TableCell className="font-medium px-4">Entradas Geral</TableCell>
                 {COLUMNS.map((col) => (
-                  <TableCell key={col} className="text-right">
+                  <TableCell key={col} className="px-4">
                     <CurrencyInput
                       value={appState.log.entradas[col]}
                       onValueChange={(value) => updateLog(col, "entradas", value)}
+                      className="text-right"
                     />
                   </TableCell>
                 ))}
-                <TableCell className="text-right font-bold">{formatCurrency(rowTotals.entradas)}</TableCell>
+                <TableCell className="text-right font-bold px-4">{formatCurrency(rowTotals.entradas)}</TableCell>
               </TableRow>
               <TableRow className="bg-muted/30">
-                <TableCell className="font-medium text-destructive">Comissão</TableCell>
+                <TableCell className="font-medium text-destructive px-4">Comissão</TableCell>
                 {COLUMNS.map((col) => (
-                  <TableCell key={col} className="text-right text-destructive">
+                  <TableCell key={col} className="text-right text-destructive font-medium px-4">
                     {formatCurrency(commissions[col])}
                   </TableCell>
                 ))}
-                <TableCell className="text-right font-bold text-destructive">{formatCurrency(rowTotals.comissao)}</TableCell>
+                <TableCell className="text-right font-bold text-destructive px-4">{formatCurrency(rowTotals.comissao)}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="font-medium">Prêmios</TableCell>
+                <TableCell className="font-medium px-4">Prêmios</TableCell>
                 {COLUMNS.map((col) => (
-                  <TableCell key={col} className="text-right">
+                  <TableCell key={col} className="px-4">
                     <CurrencyInput
                       value={appState.log.premios[col]}
                       onValueChange={(value) => updateLog(col, "premios", value)}
+                      className="text-right"
                     />
                   </TableCell>
                 ))}
-                <TableCell className="text-right font-bold">{formatCurrency(rowTotals.premios)}</TableCell>
+                <TableCell className="text-right font-bold px-4">{formatCurrency(rowTotals.premios)}</TableCell>
               </TableRow>
-              <TableRow className="bg-muted/60 hover:bg-muted/60">
-                <TableCell className="font-medium">Saldo Final</TableCell>
+              <TableRow className="bg-muted/50 hover:bg-muted/50">
+                <TableCell className="font-medium px-4">Saldo Final</TableCell>
                 {COLUMNS.map((col) => (
                   <TableCell
                     key={col}
                     className={cn(
-                      "text-right font-bold",
+                      "text-right font-bold px-4",
                       balances[col] >= 0 ? "text-green-600" : "text-destructive"
                     )}
                   >
                     {formatCurrency(balances[col])}
-                     {appState.log.entradas[col] > 0 && (appState.log.entradas[col] < commissions[col] + appState.log.premios[col]) && <div className="text-xs font-normal">Aviso: Negativo</div>}
+                     {appState.log.entradas[col] > 0 && (appState.log.entradas[col] < commissions[col] + appState.log.premios[col]) && <div className="text-xs font-normal text-center">Aviso: Negativo</div>}
                   </TableCell>
                 ))}
                 <TableCell
                   className={cn(
-                    "text-right font-bold",
+                    "text-right font-bold px-4",
                     rowTotals.saldoFinal >= 0 ? "text-green-600" : "text-destructive"
                   )}
                 >
