@@ -24,8 +24,6 @@ interface AppContextType {
   grandTotals: GrandTotals;
 
   handleNewDay: () => void;
-  handleExportJson: () => void;
-  handleImportJson: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handlePrint: () => void;
   handleExportPdf: () => Promise<void>;
 
@@ -164,41 +162,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       toast({ title: "Novo Dia", description: `Os dados para ${appState.settings.bancaName} foram reiniciados.` });
   };
 
-  const handleExportJson = () => {
-      const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(appState))}`;
-      const link = document.createElement("a");
-      link.href = jsonString;
-      link.download = `descarrego_${appState.settings.bancaName.replace(' ','_')}_${appState.date}.json`;
-      link.click();
-      toast({ title: "JSON Exportado", description: "Os dados foram exportados com sucesso." });
-  };
-
-  const handleImportJson = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-              try {
-                  const text = e.target?.result;
-                  if (typeof text === 'string') {
-                      const importedState = JSON.parse(text);
-                      if (importedState.log && importedState.settings) {
-                          updateBancaState(() => importedState);
-                          toast({ title: "JSON Importado", description: "Dados importados com sucesso." });
-                      } else {
-                          throw new Error("Formato de arquivo inválido.");
-                      }
-                  }
-              } catch (error) {
-                  toast({ variant: "destructive", title: "Erro na Importação", description: (error as Error).message });
-              } finally {
-                  event.target.value = '';
-              }
-          };
-          reader.readAsText(file);
-      }
-  };
-
   const handlePrint = () => {
       window.print();
   };
@@ -241,8 +204,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     rowTotals,
     grandTotals,
     handleNewDay,
-    handleExportJson,
-    handleImportJson,
     handlePrint,
     handleExportPdf,
     printableRef,
