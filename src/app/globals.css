@@ -113,6 +113,7 @@
     size: A4 landscape;
     margin: 1cm;
   }
+  
   .printable-area {
     padding: 0 !important;
     margin: 0 !important;
@@ -120,23 +121,41 @@
     border: none !important;
     background-color: #fff !important;
   }
+  
+  .printable-area .overflow-auto {
+      overflow: visible !important;
+      width: 100% !important;
+  }
 
   .printable-area table {
-    font-size: 12px;
+    font-size: 14px;
     color: #000;
+    table-layout: fixed;
+    width: 100%;
   }
 
   .printable-area th,
   .printable-area td {
-    padding: 6px 10px;
+    padding: 8px 12px;
     white-space: nowrap;
     color: #000 !important;
     background-color: transparent !important;
+    text-align: right;
+  }
+
+  .printable-area th {
+    text-align: center;
+  }
+
+  .printable-area td.font-medium,
+  .printable-area th.font-bold {
+    text-align: left;
   }
   
-  .printable-area .currency-value {
+  .currency-value {
     display: block;
     font-weight: 500;
+    font-size: 1.1em; /* Larger font size */
   }
 
   .printable-area .font-bold {
@@ -150,4 +169,84 @@
   .printable-area .text-green-600 {
     color: #2E7D32 !important;
   }
+}
+
+.print-capture body {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  background-color: #fff !important;
+}
+
+.print-capture .print-only {
+  display: block !important;
+}
+
+.print-capture .no-print {
+  display: none !important;
+}
+
+.print-capture .print\:hidden {
+  display: none !important;
+}
+
+.print-capture .print\:block {
+  display: block !important;
+}
+
+.print-capture .printable-area {
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  background-color: #fff !important;
+}
+
+.print-capture .printable-area .overflow-auto {
+  overflow: visible !important;
+  width: 100% !important;
+}
+
+.print-capture .printable-area table {
+  font-size: 14px;
+  color: #000;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.print-capture .printable-area th,
+.print-capture .printable-area td {
+  padding: 8px 12px;
+  white-space: nowrap;
+  color: #000 !important;
+  background-color: transparent !important;
+  text-align: right;
+}
+
+.print-capture .printable-area th {
+  text-align: center;
+}
+
+.print-capture .printable-area td.font-medium,
+.print-capture .printable-area th.font-bold {
+  text-align: left;
+}
+
+.print-capture .currency-value {
+  display: block;
+  font-weight: 500;
+  font-size: 1.1em;
+}
+
+.print-capture .printable-area .font-bold {
+  font-weight: 700 !important;
+}
+
+.print-capture .printable-area .text-destructive {
+  color: #D32F2F !important;
+}
+
+.print-capture .printable-area .text-green-600 {
+  color: #2E7D32 !important;
 }

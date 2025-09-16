@@ -31,8 +31,6 @@ const DischargeTracker = () => {
 const AppWrapper = () => {
     const { selectedBanca } = useAppContext();
 
-    // The key forces a re-mount of the entire tracker when the banca changes
-    // This ensures all hooks and contexts are reset correctly for the selected banca
     return (
       <div className='min-h-screen flex flex-col'>
         <AppHeader />

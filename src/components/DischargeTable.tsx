@@ -28,7 +28,7 @@ const DischargeTable = () => {
 
   return (
     <div className="container mx-auto px-4 pt-4">
-      <div className="border rounded-lg overflow-hidden shadow-sm printable-area">
+      <div id="printable-table-area" className="border rounded-lg overflow-hidden shadow-sm printable-area">
         <h2 className="text-xl font-bold text-center py-3 bg-muted/20 no-print">
             Painel de Lançamentos
         </h2>
@@ -49,7 +49,7 @@ const DischargeTable = () => {
               <TableRow>
                 <TableCell className="font-medium px-4 whitespace-nowrap">Entradas Geral</TableCell>
                 {COLUMNS.map((col) => (
-                  <TableCell key={col} className="px-2 text-right">
+                  <TableCell key={col} className="px-2">
                     <CurrencyInput
                       value={appState.log.entradas[col]}
                       onValueChange={(value) => updateLog(col, "entradas", value)}
@@ -72,7 +72,7 @@ const DischargeTable = () => {
               <TableRow>
                 <TableCell className="font-medium px-4 whitespace-nowrap">Prêmios</TableCell>
                 {COLUMNS.map((col) => (
-                  <TableCell key={col} className="px-2 text-right">
+                  <TableCell key={col} className="px-2">
                     <CurrencyInput
                       value={appState.log.premios[col]}
                       onValueChange={(value) => updateLog(col, "premios", value)}
