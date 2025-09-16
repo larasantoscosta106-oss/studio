@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -30,15 +31,17 @@ interface SettingsDialogProps {
 }
 
 const SettingsDialog: React.FC<SettingsDialogProps> = ({ isOpen, onOpenChange }) => {
-  const { appState, updateSettings } = useAppContext();
-  const { control, handleSubmit, formState: { errors } } = useForm<SettingsFormData>({
+  const { appState, updateSettings, selectedBanca } = useAppContext();
+  const { control, handleSubmit, reset, formState: { errors } } = useForm<SettingsFormData>({
     resolver: zodResolver(settingsSchema),
-    defaultValues: {
-      bancaName: appState.settings.bancaName,
-      commissionPeriod: appState.settings.commissionPeriod,
-      commissionGroup: appState.settings.commissionGroup,
-    },
+    defaultValues: appState.settings,
   });
+
+  useEffect(() => {
+    if(isOpen) {
+        reset(appState.settings);
+    }
+  }, [isOpen, appState, reset, selectedBanca]);
 
   const onSubmit = (data: SettingsFormData) => {
     updateSettings(data);
@@ -52,7 +55,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ isOpen, onOpenChange })
           <DialogHeader>
             <DialogTitle>Configurações</DialogTitle>
             <DialogDescription>
-              Ajuste as configurações gerais do aplicativo.
+              Ajuste as configurações para a banca: <span className="font-bold text-primary">{appState.settings.bancaName}</span>
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">

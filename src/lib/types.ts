@@ -6,6 +6,8 @@ export type Period = typeof PERIODS[number];
 export type Group = typeof GROUPS[number];
 export type ColumnId = Period | Group;
 
+export type BancaId = 'realCariri' | 'bancaUniao';
+
 export interface LogData {
   entradas: Record<ColumnId, number>;
   premios: Record<ColumnId, number>;
@@ -21,6 +23,11 @@ export interface AppState {
   date: string;
   log: LogData;
   settings: Settings;
+}
+
+export interface MultiBancaState {
+    selectedBanca: BancaId;
+    bancas: Record<BancaId, AppState>;
 }
 
 export type CalculatedCommissions = Record<ColumnId, number>;
