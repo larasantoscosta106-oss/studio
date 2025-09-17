@@ -64,10 +64,12 @@ const DischargeTable = () => {
                 <TableCell className="font-medium text-destructive px-4 whitespace-nowrap">Comissão</TableCell>
                 {COLUMNS.map((col) => (
                   <TableCell key={col} className="text-right text-destructive font-medium px-4 whitespace-nowrap">
-                    {formatCurrency(commissions[col])}
+                    <span className="currency-value">{formatCurrency(commissions[col])}</span>
                   </TableCell>
                 ))}
-                <TableCell className="text-right font-bold text-destructive px-4 whitespace-nowrap">{formatCurrency(rowTotals.comissao)}</TableCell>
+                <TableCell className="text-right font-bold text-destructive px-4 whitespace-nowrap">
+                  <span className="currency-value">{formatCurrency(rowTotals.comissao)}</span>
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium px-4 whitespace-nowrap">Prêmios</TableCell>
@@ -93,7 +95,7 @@ const DischargeTable = () => {
                       balances[col] >= 0 ? "text-green-600" : "text-destructive"
                     )}
                   >
-                    {formatCurrency(balances[col])}
+                    <span className="currency-value">{formatCurrency(balances[col])}</span>
                      {appState.log.entradas[col] > 0 && (appState.log.entradas[col] < commissions[col] + appState.log.premios[col]) && <div className="text-xs font-normal text-center print:hidden">Aviso: Negativo</div>}
                   </TableCell>
                 ))}
@@ -103,7 +105,7 @@ const DischargeTable = () => {
                     rowTotals.saldoFinal >= 0 ? "text-green-600" : "text-destructive"
                   )}
                 >
-                  {formatCurrency(rowTotals.saldoFinal)}
+                  <span className="currency-value">{formatCurrency(rowTotals.saldoFinal)}</span>
                 </TableCell>
               </TableRow>
             </TableBody>

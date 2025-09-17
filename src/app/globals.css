@@ -140,6 +140,17 @@
     white-space: nowrap;
     color: #000 !important;
     background-color: transparent !important;
+    text-align: left;
+  }
+  
+  .printable-area td.text-right,
+  .printable-area th.text-center {
+    text-align: center;
+  }
+  
+  .printable-area td .currency-value,
+  .printable-area td.text-right,
+  .printable-area td[class*="text-right"] {
     text-align: right;
   }
 
@@ -221,7 +232,18 @@
   white-space: nowrap;
   color: #000 !important;
   background-color: transparent !important;
-  text-align: right;
+  text-align: left;
+}
+
+.print-capture .printable-area td.text-right,
+.print-capture .printable-area th.text-center {
+    text-align: center;
+}
+
+.print-capture .printable-area td .currency-value,
+.print-capture .printable-area td.text-right,
+.print-capture .printable-area td[class*="text-right"] {
+    text-align: right;
 }
 
 .print-capture .printable-area th {
