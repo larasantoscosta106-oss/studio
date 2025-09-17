@@ -35,7 +35,7 @@ const DischargeTable = () => {
         </h2>
         
         {/* Mobile View */}
-        <div className="md:hidden no-print">
+        <div className="md:hidden no-print mobile-table-view">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
             {COLUMNS.map((col) => (
               <Card key={col} className="w-full">
@@ -104,7 +104,7 @@ const DischargeTable = () => {
         </div>
 
         {/* Desktop View (and Print/PDF View) */}
-        <div className="relative w-full overflow-auto hidden md:block print-block">
+        <div className="relative w-full overflow-auto hidden md:block print-block desktop-table-view">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50 hover:bg-muted/50">

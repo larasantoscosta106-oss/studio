@@ -171,63 +171,62 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const handleExportPdf = async () => {
-      const element = printableRef.current;
-      if (!element) return;
-      toast({ title: "Gerando PDF...", description: "Por favor, aguarde." });
+    const element = printableRef.current;
+    if (!element) return;
+    toast({ title: "Gerando PDF...", description: "Por favor, aguarde." });
 
-      const originalBackgroundColor = document.body.style.backgroundColor;
-      
-      try {
-          // Add a class to the body to trigger print-specific styles
-          document.body.classList.add('print-capture');
-          document.body.style.backgroundColor = 'white';
+    const mobileTable = element.querySelector<HTMLElement>('.mobile-table-view');
+    const desktopTable = element.querySelector<HTMLElement>('.desktop-table-view');
 
-          const canvas = await html2canvas(element, { 
-              scale: 2.5, // Increased scale for better resolution
-              useCORS: true,
-              logging: false,
-              // Window-width allows capturing content beyond the viewport
-              width: element.scrollWidth,
-              windowWidth: element.scrollWidth,
-          });
-          
-          // Remove the class after capture
-          document.body.classList.remove('print-capture');
-          document.body.style.backgroundColor = originalBackgroundColor;
+    // Store original display styles
+    const mobileOriginalDisplay = mobileTable ? mobileTable.style.display : '';
+    const desktopOriginalDisplay = desktopTable ? desktopTable.style.display : '';
 
-          const imgData = canvas.toDataURL('image/png');
-          const pdf = new jsPDF('l', 'mm', 'a4');
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = pdf.internal.pageSize.getHeight();
+    // Force desktop view for capture
+    if (mobileTable) mobileTable.style.display = 'none';
+    if (desktopTable) desktopTable.style.display = 'block';
 
-          const margin = 10;
-          const usableWidth = pdfWidth - (2 * margin);
-          const usableHeight = pdfHeight - (2 * margin);
+    try {
+        const canvas = await html2canvas(element, { 
+            scale: 2.5,
+            useCORS: true,
+            logging: false,
+            width: element.scrollWidth,
+            windowWidth: element.scrollWidth,
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('l', 'mm', 'a4');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const margin = 10;
+        const usableWidth = pdfWidth - (2 * margin);
+        const usableHeight = pdfHeight - (2 * margin);
+        const ratio = Math.min(usableWidth / canvas.width, usableHeight / canvas.height);
+        const finalImgWidth = canvas.width * ratio;
+        const finalImgHeight = canvas.height * ratio;
+        const imgX = (pdfWidth - finalImgWidth) / 2;
+        const imgY = (pdfHeight - finalImgHeight) / 2;
+        
+        pdf.addImage(imgData, 'PNG', imgX, imgY, finalImgWidth, finalImgHeight);
+        
+        const now = new Date();
+        const dateTimeString = format(now, "dd/MM/yyyy 'às' HH:mm:ss", { locale: ptBR });
+        pdf.setFontSize(8);
+        pdf.setTextColor(150);
+        pdf.text(`Exportado em: ${dateTimeString}`, margin, pdfHeight - margin + 5);
 
-          const ratio = Math.min(usableWidth / canvas.width, usableHeight / canvas.height);
-          const finalImgWidth = canvas.width * ratio;
-          const finalImgHeight = canvas.height * ratio;
+        pdf.save(`descarrego_${appState.settings.bancaName.replace(/ /g, '_')}_${appState.date}.pdf`);
 
-          const imgX = (pdfWidth - finalImgWidth) / 2;
-          const imgY = (pdfHeight - finalImgHeight) / 2;
-          
-          pdf.addImage(imgData, 'PNG', imgX, imgY, finalImgWidth, finalImgHeight);
-          
-          const now = new Date();
-          const dateTimeString = format(now, "dd/MM/yyyy 'às' HH:mm:ss", { locale: ptBR });
-          pdf.setFontSize(8);
-          pdf.setTextColor(150);
-          pdf.text(`Exportado em: ${dateTimeString}`, margin, pdfHeight - margin + 5);
-
-          pdf.save(`descarrego_${appState.settings.bancaName.replace(/ /g, '_')}_${appState.date}.pdf`);
-
-          toast({ title: "PDF Gerado!", description: "Seu PDF foi exportado com sucesso." });
-      } catch(e: any) {
-          document.body.classList.remove('print-capture');
-          document.body.style.backgroundColor = originalBackgroundColor;
-          console.error(e);
-          toast({ variant: "destructive", title: "Erro ao gerar PDF", description: e.message || "Ocorreu um erro inesperado." });
-      }
+        toast({ title: "PDF Gerado!", description: "Seu PDF foi exportado com sucesso." });
+    } catch(e: any) {
+        console.error(e);
+        toast({ variant: "destructive", title: "Erro ao gerar PDF", description: e.message || "Ocorreu um erro inesperado." });
+    } finally {
+        // Restore original display styles
+        if (mobileTable) mobileTable.style.display = mobileOriginalDisplay;
+        if (desktopTable) desktopTable.style.display = desktopOriginalDisplay;
+    }
   };
 
   const contextValue: AppContextType = {
