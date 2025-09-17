@@ -35,7 +35,7 @@ const DischargeTable = () => {
         </h2>
         
         {/* Mobile View */}
-        <div className="md:hidden">
+        <div className="md:hidden no-print">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
             {COLUMNS.map((col) => (
               <Card key={col} className="w-full">
@@ -49,9 +49,8 @@ const DischargeTable = () => {
                     <CurrencyInput
                       value={appState.log.entradas[col]}
                       onValueChange={(value) => updateLog(col, "entradas", value)}
-                      className="text-right w-32 print:hidden"
+                      className="text-right w-32"
                     />
-                    <span className="currency-value hidden print:block text-right w-32">{formatCurrency(appState.log.entradas[col])}</span>
                   </div>
                   {/* Comissão */}
                   <div className="flex justify-between items-center">
@@ -64,9 +63,8 @@ const DischargeTable = () => {
                      <CurrencyInput
                       value={appState.log.premios[col]}
                       onValueChange={(value) => updateLog(col, "premios", value)}
-                      className="text-right w-32 print:hidden"
+                      className="text-right w-32"
                     />
-                    <span className="currency-value hidden print:block text-right w-32">{formatCurrency(appState.log.premios[col])}</span>
                   </div>
                   {/* Saldo */}
                   <div className="flex justify-between items-center border-t pt-3 mt-2">
@@ -105,8 +103,8 @@ const DischargeTable = () => {
           </div>
         </div>
 
-        {/* Desktop View */}
-        <div className="relative w-full overflow-auto hidden md:block">
+        {/* Desktop View (and Print/PDF View) */}
+        <div className="relative w-full overflow-auto hidden md:block print-block">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50 hover:bg-muted/50">
@@ -127,9 +125,9 @@ const DischargeTable = () => {
                     <CurrencyInput
                       value={appState.log.entradas[col]}
                       onValueChange={(value) => updateLog(col, "entradas", value)}
-                      className="text-right w-full print:hidden"
+                      className="text-right w-full print-hidden"
                     />
-                     <span className="currency-value hidden print:block text-right w-full">{formatCurrency(appState.log.entradas[col])}</span>
+                     <span className="currency-value hidden print-block text-right w-full">{formatCurrency(appState.log.entradas[col])}</span>
                   </TableCell>
                 ))}
                 <TableCell className="text-right font-bold px-4 whitespace-nowrap">{formatCurrency(rowTotals.entradas)}</TableCell>
@@ -152,9 +150,9 @@ const DischargeTable = () => {
                     <CurrencyInput
                       value={appState.log.premios[col]}
                       onValueChange={(value) => updateLog(col, "premios", value)}
-                      className="text-right w-full print:hidden"
+                      className="text-right w-full print-hidden"
                     />
-                    <span className="currency-value hidden print:block text-right w-full">{formatCurrency(appState.log.premios[col])}</span>
+                    <span className="currency-value hidden print-block text-right w-full">{formatCurrency(appState.log.premios[col])}</span>
                   </TableCell>
                 ))}
                 <TableCell className="text-right font-bold px-4 whitespace-nowrap">{formatCurrency(rowTotals.premios)}</TableCell>
@@ -170,7 +168,7 @@ const DischargeTable = () => {
                     )}
                   >
                     <span className="currency-value">{formatCurrency(balances[col])}</span>
-                     {appState.log.entradas[col] > 0 && (appState.log.entradas[col] < commissions[col] + appState.log.premios[col]) && <div className="text-xs font-normal text-center print:hidden">Aviso: Negativo</div>}
+                     {appState.log.entradas[col] > 0 && (appState.log.entradas[col] < commissions[col] + appState.log.premios[col]) && <div className="text-xs font-normal text-center print-hidden">Aviso: Negativo</div>}
                   </TableCell>
                 ))}
                 <TableCell
@@ -191,5 +189,3 @@ const DischargeTable = () => {
 };
 
 export default DischargeTable;
-
-    

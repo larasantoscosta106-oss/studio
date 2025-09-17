@@ -11,35 +11,28 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 const DischargeTracker = () => {
-  const { appState, printableRef } = useAppContext();
+  const { appState, printableRef, selectedBanca } = useAppContext();
   
   const formattedDate = format(new Date(appState.date + 'T00:00:00'), "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
 
   return (
-    <div className='bg-background' ref={printableRef}>
-        <div className="container mx-auto pb-4 print-only hidden">
-            <h1 className="text-2xl font-bold text-center py-4">ROTEIRO DESCARGA – {appState.settings.bancaName.toUpperCase()}</h1>
-            <h2 className="text-xl font-semibold text-center pb-4">Data: {formattedDate}</h2>
-        </div>
-        <DischargeTable />
-        <PeriodTotals />
-        <TotalsFooter />
-    </div>
-  );
-};
-
-const AppWrapper = () => {
-    const { selectedBanca } = useAppContext();
-
-    return (
-      <div className='min-h-screen flex flex-col'>
+    <div className='min-h-screen flex flex-col' key={selectedBanca}>
         <AppHeader />
         <Toolbar />
         <main className="flex-grow">
-          <DischargeTracker key={selectedBanca} />
+            <div className='bg-background' ref={printableRef}>
+                <div className="container mx-auto pb-4 print-only hidden">
+                    <h1 className="text-2xl font-bold text-center py-4">ROTEIRO DESCARGA – {appState.settings.bancaName.toUpperCase()}</h1>
+                    <h2 className="text-xl font-semibold text-center pb-4">Data: {formattedDate}</h2>
+                </div>
+                <DischargeTable />
+                <PeriodTotals />
+                <TotalsFooter />
+            </div>
         </main>
       </div>
-    );
+  );
 };
 
-export default AppWrapper;
+
+export default DischargeTracker;
