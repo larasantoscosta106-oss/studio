@@ -13,6 +13,7 @@ import { formatCurrency } from "@/lib/utils";
 import CurrencyInput from "./CurrencyInput";
 import { cn } from "@/lib/utils";
 import { COLUMNS } from "@/lib/types";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 const COLUMN_NAMES: Record<string, string> = {
   manha: "Manhã",
@@ -29,10 +30,83 @@ const DischargeTable = () => {
   return (
     <div className="container mx-auto px-4 pt-4">
       <div id="printable-table-area" className="border rounded-lg overflow-hidden shadow-sm printable-area">
-        <h2 className="text-xl font-bold text-center py-3 bg-muted/20 no-print md:text-2xl">
+        <h2 className="text-xl font-bold text-center py-3 bg-muted/20 md:text-2xl">
             Painel de Lançamentos
         </h2>
-        <div className="relative w-full overflow-auto">
+        
+        {/* Mobile View */}
+        <div className="md:hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
+            {COLUMNS.map((col) => (
+              <Card key={col} className="w-full">
+                <CardHeader className="p-4 bg-muted/20">
+                  <CardTitle className="text-base text-center">{COLUMN_NAMES[col]}</CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 space-y-3 text-sm">
+                  {/* Entradas */}
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="font-medium text-muted-foreground">Entradas:</span>
+                    <CurrencyInput
+                      value={appState.log.entradas[col]}
+                      onValueChange={(value) => updateLog(col, "entradas", value)}
+                      className="text-right w-32 print:hidden"
+                    />
+                    <span className="currency-value hidden print:block text-right w-32">{formatCurrency(appState.log.entradas[col])}</span>
+                  </div>
+                  {/* Comissão */}
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium text-muted-foreground">Comissão:</span>
+                    <span className="text-destructive font-medium">{formatCurrency(commissions[col])}</span>
+                  </div>
+                  {/* Prêmios */}
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="font-medium text-muted-foreground">Prêmios:</span>
+                     <CurrencyInput
+                      value={appState.log.premios[col]}
+                      onValueChange={(value) => updateLog(col, "premios", value)}
+                      className="text-right w-32 print:hidden"
+                    />
+                    <span className="currency-value hidden print:block text-right w-32">{formatCurrency(appState.log.premios[col])}</span>
+                  </div>
+                  {/* Saldo */}
+                  <div className="flex justify-between items-center border-t pt-3 mt-2">
+                    <span className="font-bold text-muted-foreground">Saldo:</span>
+                    <span className={cn("font-bold", balances[col] >= 0 ? "text-green-600" : "text-destructive")}>
+                      {formatCurrency(balances[col])}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          {/* Mobile Totals */}
+          <div className="p-4 border-t">
+              <h3 className="text-lg font-bold text-center mb-3">Total Diário</h3>
+              <div className="space-y-2 text-sm max-w-sm mx-auto">
+                <div className="flex justify-between">
+                    <span className="font-semibold text-muted-foreground">Entradas:</span>
+                    <span>{formatCurrency(rowTotals.entradas)}</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="font-semibold text-muted-foreground">Comissão:</span>
+                    <span className="text-destructive">{formatCurrency(rowTotals.comissao)}</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="font-semibold text-muted-foreground">Prêmios:</span>
+                    <span>{formatCurrency(rowTotals.premios)}</span>
+                </div>
+                <div className="flex justify-between pt-2 border-t mt-2">
+                    <span className="font-bold text-muted-foreground">Saldo Final:</span>
+                    <span className={cn("font-bold", rowTotals.saldoFinal >= 0 ? "text-green-600" : "text-destructive")}>
+                        {formatCurrency(rowTotals.saldoFinal)}
+                    </span>
+                </div>
+              </div>
+          </div>
+        </div>
+
+        {/* Desktop View */}
+        <div className="relative w-full overflow-auto hidden md:block">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50 hover:bg-muted/50">
@@ -117,3 +191,5 @@ const DischargeTable = () => {
 };
 
 export default DischargeTable;
+
+    

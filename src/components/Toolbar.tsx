@@ -17,28 +17,20 @@ const Toolbar = () => {
   const [isSettingsOpen, setSettingsOpen] = useState(false);
 
   return (
-    <div className="container mx-auto px-4 pt-4 flex justify-center sm:justify-start no-print">
-      <Tabs defaultValue="actions" className="w-full sm:w-auto">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="actions">Ações</TabsTrigger>
-          <TabsTrigger value="export">Exportar</TabsTrigger>
-        </TabsList>
-        <TabsContent value="actions">
-          <div className="flex flex-wrap gap-2 justify-center sm:justify-start mt-2">
-            <Button onClick={handleNewDay}><PlusCircle /> Novo Dia</Button>
-            <Button onClick={() => setSettingsOpen(true)}><Settings /> Configurações</Button>
-          </div>
-        </TabsContent>
-        <TabsContent value="export">
-          <div className="flex flex-wrap gap-2 justify-center sm:justify-start mt-2">
-            <Button onClick={handlePrint}><Printer /> Imprimir</Button>
-            <Button onClick={handleExportPdf}><FileText /> Exportar PDF</Button>
-          </div>
-        </TabsContent>
-      </Tabs>
+    <div className="container mx-auto px-4 py-4 flex justify-center sm:justify-start no-print">
+      <div className="w-full sm:w-auto">
+        <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+            <Button onClick={handleNewDay} variant="outline" size="sm"><PlusCircle /> Novo Dia</Button>
+            <Button onClick={() => setSettingsOpen(true)} variant="outline" size="sm"><Settings /> Configurações</Button>
+            <Button onClick={handlePrint} variant="outline" size="sm"><Printer /> Imprimir</Button>
+            <Button onClick={handleExportPdf} variant="outline" size="sm"><FileText /> Exportar PDF</Button>
+        </div>
+      </div>
       <SettingsDialog isOpen={isSettingsOpen} onOpenChange={setSettingsOpen} />
     </div>
   );
 };
 
 export default Toolbar;
+
+    
