@@ -25,9 +25,15 @@ export interface AppState {
   settings: Settings;
 }
 
+export interface SavedDay extends AppState {
+    id: string; // Typically date string
+    totals: RowTotals;
+}
+
 export interface MultiBancaState {
     selectedBanca: BancaId;
     bancas: Record<BancaId, AppState>;
+    savedDays: Record<BancaId, SavedDay[]>;
 }
 
 export type CalculatedCommissions = Record<ColumnId, number>;

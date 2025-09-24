@@ -7,13 +7,14 @@ import {
   Printer,
   PlusCircle,
   Settings,
-  FileText
+  FileText,
+  Save
 } from "lucide-react";
 import SettingsDialog from './SettingsDialog';
 import { useAppContext } from '@/contexts/AppContext';
 
 const Toolbar = () => {
-  const { handleNewDay, handlePrint, handleExportPdf } = useAppContext();
+  const { handleNewDay, handleSaveDay, handlePrint, handleExportPdf } = useAppContext();
   const [isSettingsOpen, setSettingsOpen] = useState(false);
 
   return (
@@ -21,6 +22,7 @@ const Toolbar = () => {
       <div className="w-full sm:w-auto">
         <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
             <Button onClick={handleNewDay} variant="outline" size="sm"><PlusCircle /> Novo Dia</Button>
+            <Button onClick={handleSaveDay} variant="outline" size="sm"><Save /> Salvar Dia</Button>
             <Button onClick={() => setSettingsOpen(true)} variant="outline" size="sm"><Settings /> Configurações</Button>
             <Button onClick={handlePrint} variant="outline" size="sm"><Printer /> Imprimir</Button>
             <Button onClick={handleExportPdf} variant="outline" size="sm"><FileText /> Exportar PDF</Button>
@@ -32,5 +34,3 @@ const Toolbar = () => {
 };
 
 export default Toolbar;
-
-    

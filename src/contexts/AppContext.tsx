@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, ReactNode, useState, useEffect, useMemo } from 'react';
-import type { AppState, MultiBancaState, BancaId, CalculatedCommissions, CalculatedBalances, RowTotals, GrandTotals, ColumnId, Settings, Period } from '@/lib/types';
+import type { AppState, MultiBancaState, BancaId, CalculatedCommissions, CalculatedBalances, RowTotals, GrandTotals, ColumnId, Settings, Period, SavedDay } from '@/lib/types';
 import useLocalStorage from '@/hooks/use-local-storage';
 import { PERIODS, COLUMNS } from '@/lib/types';
 import { useToast } from "@/hooks/use-toast";
@@ -26,6 +26,7 @@ interface AppContextType {
   grandTotals: GrandTotals;
 
   handleNewDay: () => void;
+  handleSaveDay: () => void;
   handlePrint: () => void;
   handleExportPdf: () => Promise<void>;
 
@@ -66,6 +67,10 @@ const getInitialMultiBancaState = (): MultiBancaState => {
     bancas: {
       realCariri: getInitialBancaState('realCariri'),
       bancaUniao: getInitialBancaState('bancaUniao'),
+    },
+    savedDays: {
+        realCariri: [],
+        bancaUniao: [],
     }
   };
 };
@@ -165,6 +170,39 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       }));
       toast({ title: "Novo Dia", description: `Os dados para ${appState.settings.bancaName} foram reiniciados.` });
   };
+  
+  const handleSaveDay = () => {
+    const dayToSave: SavedDay = {
+        ...appState,
+        id: appState.date,
+        totals: rowTotals,
+    };
+    
+    setMultiAppState(prev => {
+        const existingDays = prev.savedDays?.[selectedBanca] ?? [];
+        const dayIndex = existingDays.findIndex(d => d.id === dayToSave.id);
+
+        let newSavedDays;
+        if (dayIndex > -1) {
+            // Update existing day
+            newSavedDays = [...existingDays];
+            newSavedDays[dayIndex] = dayToSave;
+        } else {
+            // Add new day
+            newSavedDays = [...existingDays, dayToSave];
+        }
+
+        return {
+            ...prev,
+            savedDays: {
+                ...prev.savedDays,
+                [selectedBanca]: newSavedDays,
+            },
+        };
+    });
+
+    toast({ title: "Dia Salvo!", description: `O registro para ${format(new Date(appState.date + 'T00:00:00'), "dd/MM/yyyy", { locale: ptBR })} foi salvo com sucesso.` });
+  };
 
   const handlePrint = () => {
       window.print();
@@ -179,21 +217,27 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const desktopTable = element.querySelector<HTMLElement>('.desktop-table-view');
 
     // Store original display styles
-    const mobileOriginalDisplay = mobileTable ? mobileTable.style.display : '';
-    const desktopOriginalDisplay = desktopTable ? desktopTable.style.display : '';
+    const mobileOriginalDisplay = mobileTable ? getComputedStyle(mobileTable).display : '';
+    const desktopOriginalDisplay = desktopTable ? getComputedStyle(desktopTable).display : '';
 
     // Force desktop view for capture
     if (mobileTable) mobileTable.style.display = 'none';
     if (desktopTable) desktopTable.style.display = 'block';
 
     try {
+        document.body.classList.add('print-capture');
+
         const canvas = await html2canvas(element, { 
             scale: 2.5,
             useCORS: true,
             logging: false,
             width: element.scrollWidth,
+            height: element.scrollHeight,
             windowWidth: element.scrollWidth,
+            windowHeight: element.scrollHeight,
         });
+        
+        document.body.classList.remove('print-capture');
         
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF('l', 'mm', 'a4');
@@ -226,6 +270,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         // Restore original display styles
         if (mobileTable) mobileTable.style.display = mobileOriginalDisplay;
         if (desktopTable) desktopTable.style.display = desktopOriginalDisplay;
+        document.body.classList.remove('print-capture');
     }
   };
 
@@ -243,6 +288,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     rowTotals,
     grandTotals,
     handleNewDay,
+    handleSaveDay,
     handlePrint,
     handleExportPdf,
     printableRef,
