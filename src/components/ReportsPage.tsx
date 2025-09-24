@@ -3,7 +3,7 @@
 import React, { useMemo, useState, useRef } from 'react';
 import { useAppContext } from '@/contexts/AppContext';
 import { SavedDay, RowTotals } from '@/lib/types';
-import { format, getWeek, getMonth, getYear, startOfWeek, endOfWeek, parseISO, isWithinInterval } from 'date-fns';
+import { format, getWeek, getMonth, getYear, startOfWeek, endOfWeek, parseISO, isWithinInterval, addWeeks } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { formatCurrency, cn } from '@/lib/utils';
 import { Button } from './ui/button';
@@ -56,18 +56,30 @@ const ReportsPage = () => {
         return months;
     }, [sortedDays]);
 
-    const weekOptions = Object.keys(weeklyData).map(weekKey => {
-        const [year, weekNum] = weekKey.split('-W');
-        const firstDayOfWeek = startOfWeek(parseISO(`${year}-01-01T00:00:00.000Z`), { weekStartsOn: 1 });
-        const dateInWeek = new Date(firstDayOfWeek);
-        dateInWeek.setDate(dateInWeek.getDate() + (parseInt(weekNum) - 1) * 7);
-        const weekStart = startOfWeek(dateInWeek, { weekStartsOn: 1 });
-        const weekEnd = endOfWeek(dateInWeek, { weekStartsOn: 1 });
-        return {
-            value: weekKey,
-            label: `Semana de ${format(weekStart, 'dd/MM')} a ${format(weekEnd, 'dd/MM/yyyy')}`
-        };
-    }).reverse();
+    const weekOptions = useMemo(() => {
+        const weekKeys = new Set(Object.keys(weeklyData));
+        const today = new Date();
+        const currentWeek = getWeek(today, { weekStartsOn: 1 });
+        const currentYear = getYear(today);
+        const currentWeekKey = `${currentYear}-W${currentWeek}`;
+        weekKeys.add(currentWeekKey);
+
+        const nextWeekDate = addWeeks(today, 1);
+        const nextWeek = getWeek(nextWeekDate, { weekStartsOn: 1 });
+        const nextWeekYear = getYear(nextWeekDate);
+        const nextWeekKey = `${nextWeekYear}-W${nextWeek}`;
+        weekKeys.add(nextWeekKey);
+        
+        return Array.from(weekKeys).map(weekKey => {
+            const [year, weekNum] = weekKey.split('-W');
+            const weekStart = startOfWeek(new Date(parseInt(year), 0, 1 + (parseInt(weekNum) - 1) * 7), { weekStartsOn: 1 });
+            const weekEnd = endOfWeek(weekStart, { weekStartsOn: 1 });
+            return {
+                value: weekKey,
+                label: `Semana de ${format(weekStart, 'dd/MM')} a ${format(weekEnd, 'dd/MM/yyyy')}`
+            };
+        }).sort((a, b) => b.value.localeCompare(a.value));
+    }, [weeklyData]);
 
     const monthOptions = Object.keys(monthlyData).map(monthKey => {
         const [year, monthNum] = monthKey.split('-M');
@@ -89,10 +101,10 @@ const ReportsPage = () => {
         }, { entradas: 0, comissao: 0, premios: 0, saldoFinal: 0 });
     };
 
-    const weekDays = selectedWeek ? weeklyData[selectedWeek] : [];
+    const weekDays = selectedWeek ? weeklyData[selectedWeek] || [] : [];
     const weekTotals = calculateTotals(weekDays);
 
-    const monthDays = selectedMonth ? monthlyData[selectedMonth] : [];
+    const monthDays = selectedMonth ? monthlyData[selectedMonth] || [] : [];
     const monthTotals = calculateTotals(monthDays);
     
     const handleExportPdf = async (reportType: 'semanal' | 'mensal', title: string) => {
@@ -163,7 +175,7 @@ const ReportsPage = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {days.map(day => (
+                    {days.length > 0 ? days.map(day => (
                         <TableRow key={day.id}>
                             <TableCell className="font-medium text-left">{format(new Date(day.date + 'T00:00:00'), 'dd/MM/yy, eee', { locale: ptBR })}</TableCell>
                             <TableCell className="text-right">{formatCurrency(day.totals.entradas)}</TableCell>
@@ -173,7 +185,11 @@ const ReportsPage = () => {
                                 {formatCurrency(day.totals.saldoFinal)}
                             </TableCell>
                         </TableRow>
-                    ))}
+                    )) : (
+                        <TableRow>
+                            <TableCell colSpan={5} className="text-center text-muted-foreground py-8">Nenhum dado salvo para este período.</TableCell>
+                        </TableRow>
+                    )}
                 </TableBody>
                 <TableFooter>
                     <TableRow className="bg-muted/50 font-bold">
@@ -212,7 +228,7 @@ const ReportsPage = () => {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    {selectedWeek && weekDays.length > 0 ? (
+                    {selectedWeek ? (
                          <div ref={selectedWeek ? printableRef : null}>
                             {renderReportTable(weekDays, weekTotals, 'Semanal')}
                          </div>
@@ -242,7 +258,7 @@ const ReportsPage = () => {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    {selectedMonth && monthDays.length > 0 ? (
+                    {selectedMonth ? (
                         <div ref={selectedMonth && !selectedWeek ? printableRef : null}>
                            {renderReportTable(monthDays, monthTotals, 'Mensal')}
                         </div>
@@ -256,3 +272,5 @@ const ReportsPage = () => {
 };
 
 export default ReportsPage;
+
+    
