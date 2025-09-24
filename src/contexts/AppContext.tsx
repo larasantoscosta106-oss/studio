@@ -10,6 +10,8 @@ import html2canvas from 'html2canvas';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
+type View = 'tracker' | 'reports';
+
 interface AppContextType {
   multiAppState: MultiBancaState;
   setMultiAppState: (value: MultiBancaState | ((val: MultiBancaState) => MultiBancaState)) => void;
@@ -31,6 +33,11 @@ interface AppContextType {
   handleExportPdf: () => Promise<void>;
 
   printableRef: React.RefObject<HTMLDivElement>;
+  
+  view: View;
+  setView: (view: View) => void;
+  
+  savedDays: SavedDay[];
 }
 
 export const AppContext = createContext<AppContextType | null>(null);
@@ -79,6 +86,7 @@ const getInitialMultiBancaState = (): MultiBancaState => {
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [multiAppState, setMultiAppState] = useLocalStorage<MultiBancaState>('multi-discharge-app-state', getInitialMultiBancaState());
   const [isClient, setIsClient] = useState(false);
+  const [view, setView] = useState<View>('tracker');
   const { toast } = useToast();
   const printableRef = React.useRef<HTMLDivElement>(null);
 
@@ -88,6 +96,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const selectedBanca = multiAppState.selectedBanca;
   const appState = multiAppState.bancas[selectedBanca];
+  const savedDays = multiAppState.savedDays?.[selectedBanca] ?? [];
 
   useEffect(() => {
       if (isClient) {
@@ -184,11 +193,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
         let newSavedDays;
         if (dayIndex > -1) {
-            // Update existing day
             newSavedDays = [...existingDays];
             newSavedDays[dayIndex] = dayToSave;
         } else {
-            // Add new day
             newSavedDays = [...existingDays, dayToSave];
         }
 
@@ -205,7 +212,15 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const handlePrint = () => {
-      window.print();
+      const printContents = printableRef.current?.innerHTML;
+      const originalContents = document.body.innerHTML;
+      if (printContents) {
+          document.body.innerHTML = printContents;
+          window.print();
+          document.body.innerHTML = originalContents;
+          // We need to re-trigger a render in React to re-attach event listeners
+          window.location.reload(); 
+      }
   };
 
   const handleExportPdf = async () => {
@@ -216,13 +231,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const mobileTable = element.querySelector<HTMLElement>('.mobile-table-view');
     const desktopTable = element.querySelector<HTMLElement>('.desktop-table-view');
 
-    // Store original display styles
     const mobileOriginalDisplay = mobileTable ? getComputedStyle(mobileTable).display : '';
     const desktopOriginalDisplay = desktopTable ? getComputedStyle(desktopTable).display : '';
 
-    // Force desktop view for capture
     if (mobileTable) mobileTable.style.display = 'none';
     if (desktopTable) desktopTable.style.display = 'block';
+    
+    const printOnlyElements = element.querySelectorAll<HTMLElement>('.print-only');
+    printOnlyElements.forEach(el => el.style.display = 'block');
 
     try {
         document.body.classList.add('print-capture');
@@ -267,9 +283,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         console.error(e);
         toast({ variant: "destructive", title: "Erro ao gerar PDF", description: e.message || "Ocorreu um erro inesperado." });
     } finally {
-        // Restore original display styles
         if (mobileTable) mobileTable.style.display = mobileOriginalDisplay;
         if (desktopTable) desktopTable.style.display = desktopOriginalDisplay;
+        printOnlyElements.forEach(el => el.style.display = 'none');
         document.body.classList.remove('print-capture');
     }
   };
@@ -292,11 +308,19 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     handlePrint,
     handleExportPdf,
     printableRef,
+    view,
+    setView,
+    savedDays,
   };
   
   if (!isClient) {
+      const dummyContext: AppContextType = {
+        ...contextValue,
+        appState: getInitialBancaState(multiAppState.selectedBanca),
+        savedDays: [],
+      };
       return (
-          <AppContext.Provider value={contextValue}>
+          <AppContext.Provider value={dummyContext}>
               <div className="min-h-screen bg-background"></div>
           </AppContext.Provider>
       )
