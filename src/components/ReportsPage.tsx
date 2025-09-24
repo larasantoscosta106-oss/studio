@@ -3,7 +3,7 @@
 import React, { useMemo, useState, useRef } from 'react';
 import { useAppContext } from '@/contexts/AppContext';
 import { SavedDay, RowTotals } from '@/lib/types';
-import { format, getWeek, getMonth, getYear, startOfWeek, endOfWeek, parseISO, isWithinInterval, addWeeks } from 'date-fns';
+import { format, getWeek, getMonth, getYear, startOfWeek, endOfWeek, parseISO, isWithinInterval, addWeeks, addDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { formatCurrency, cn } from '@/lib/utils';
 import { Button } from './ui/button';
@@ -73,7 +73,7 @@ const ReportsPage = () => {
         return Array.from(weekKeys).map(weekKey => {
             const [year, weekNum] = weekKey.split('-W');
             const weekStart = startOfWeek(new Date(parseInt(year), 0, 1 + (parseInt(weekNum) - 1) * 7), { weekStartsOn: 1 });
-            const weekEnd = endOfWeek(weekStart, { weekStartsOn: 1 });
+            const weekEnd = addDays(weekStart, 5); // Monday to Saturday
             return {
                 value: weekKey,
                 label: `Semana de ${format(weekStart, 'dd/MM')} a ${format(weekEnd, 'dd/MM/yyyy')}`
