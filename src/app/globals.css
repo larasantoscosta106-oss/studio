@@ -32,15 +32,15 @@
   }
 
   :root[data-theme="real-cariri"] {
-    --primary: 145 63% 42%; /* Green */
-    --ring: 145 63% 42%;
-    --primary-foreground: 145 53% 96%;
+    --primary: 221 83% 53%; /* Dark Blue */
+    --ring: 221 83% 53%;
+    --primary-foreground: 221 83% 95%;
   }
 
   :root[data-theme="banca-uniao"] {
-    --primary: 330 80% 60%; /* Pink */
-    --ring: 330 80% 60%;
-    --primary-foreground: 330 70% 98%;
+    --primary: 0 72% 51%; /* Dark Red */
+    --ring: 0 72% 51%;
+    --primary-foreground: 0 72% 95%;
   }
 
   .dark {
@@ -71,15 +71,15 @@
   }
 
   .dark[data-theme="real-cariri"] {
-    --primary: 145 63% 42%; /* Green */
-    --ring: 145 63% 42%;
-    --primary-foreground: 145 53% 96%;
+    --primary: 221 83% 53%; /* Dark Blue */
+    --ring: 221 83% 53%;
+    --primary-foreground: 221 83% 95%;
   }
 
   .dark[data-theme="banca-uniao"] {
-    --primary: 330 80% 60%; /* Pink */
-    --ring: 330 80% 60%;
-    --primary-foreground: 330 70% 98%;
+    --primary: 0 72% 51%; /* Dark Red */
+    --ring: 0 72% 51%;
+    --primary-foreground: 0 72% 95%;
   }
 }
 
