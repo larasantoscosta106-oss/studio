@@ -3,6 +3,7 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { Input } from '@/components/ui/input';
 import { formatCurrency, parseCurrency } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 
 interface CurrencyInputProps {
   value: number;
@@ -42,7 +43,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({ value, onValueChange, cla
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      className={className}
+      className={cn("border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0", className)}
       inputMode="decimal"
     />
   );
