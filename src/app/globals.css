@@ -31,10 +31,16 @@
     --chart-5: 27 87% 67%;
   }
 
+  :root[data-theme="real-cariri"] {
+    --primary: 145 63% 42%; /* Green */
+    --ring: 145 63% 42%;
+    --primary-foreground: 145 53% 96%;
+  }
+
   :root[data-theme="banca-uniao"] {
-    --primary: 25 95% 53%; /* Orange */
-    --ring: 25 95% 53%;
-    --primary-foreground: 25 85% 98%;
+    --primary: 330 80% 60%; /* Pink */
+    --ring: 330 80% 60%;
+    --primary-foreground: 330 70% 98%;
   }
 
   .dark {
@@ -64,10 +70,16 @@
     --chart-5: 340 75% 55%;
   }
 
+  .dark[data-theme="real-cariri"] {
+    --primary: 145 63% 42%; /* Green */
+    --ring: 145 63% 42%;
+    --primary-foreground: 145 53% 96%;
+  }
+
   .dark[data-theme="banca-uniao"] {
-    --primary: 25 95% 53%; /* Orange */
-    --ring: 25 95% 53%;
-    --primary-foreground: 25 85% 98%;
+    --primary: 330 80% 60%; /* Pink */
+    --ring: 330 80% 60%;
+    --primary-foreground: 330 70% 98%;
   }
 }
 
@@ -148,7 +160,7 @@
     text-align: center;
   }
   
-  .printable-area td .currency-value,
+  .printable-area .currency-value,
   .printable-area td.text-right,
   .printable-area td[class*="text-right"] {
     text-align: right;
@@ -240,7 +252,7 @@
     text-align: center;
 }
 
-.print-capture .printable-area td .currency-value,
+.print-capture .printable-area .currency-value,
 .print-capture .printable-area td.text-right,
 .print-capture .printable-area td[class*="text-right"] {
     text-align: right;

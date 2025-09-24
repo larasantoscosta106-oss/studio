@@ -99,10 +99,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const savedDays = multiAppState.savedDays?.[selectedBanca] ?? [];
 
   useEffect(() => {
-      if (isClient) {
-        const theme = selectedBanca === 'bancaUniao' ? 'banca-uniao' : 'default';
-        document.documentElement.setAttribute('data-theme', theme);
-      }
+    if (isClient) {
+      const theme = selectedBanca === 'bancaUniao' ? 'banca-uniao' : 'real-cariri';
+      document.documentElement.setAttribute('data-theme', theme);
+    }
   }, [selectedBanca, isClient]);
 
   const setSelectedBanca = (bancaId: BancaId) => {
