@@ -31,7 +31,7 @@ const DischargeTable = () => {
     <div className="container mx-auto px-4 pt-4">
       <div id="printable-table-area" className="border rounded-lg overflow-hidden shadow-sm printable-area">
         <h2 className="text-xl font-bold text-center py-3 bg-muted/20 md:text-2xl">
-            Painel de Lançamentos
+            Descarrego - {appState.settings.bancaName}
         </h2>
         
         {/* Mobile View */}
